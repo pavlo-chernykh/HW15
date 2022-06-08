@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+     const movies = [
+      {
+        name: ['Law Abiding Citizen'],
+        genre: ['Thriller', 'Drama'],
+        year: [2009]
+      },
+      {
+        name: ['Parasite'],
+        genre: ['Thriller', 'Comedy'],
+        year: [2019]
+      },
+      {
+        name: ['The Platform'],
+        genre: ['Sci-fi', 'Thriller'],
+        year: [2019]
+      },
+    ];
+// name and year keys were put in array for a reason. To make them work when calling CreateMapByProperty function
+    const movies2 = [
+      {
+        name: 'Se7en',
+        genre: ['Thriller', 'Crime'],
+        year: 1995
+      },
+      {
+        name: 'Home Alone',
+        genre: ['Comedy', 'Family'],
+        year: 2019
+      },
+      {
+        name: 'Green Elephant Calf',
+        genre: ['Horror', 'Thriller'],
+        year: 1999
+      },
+    ];
+    
+    function CreateMapByProperty (data, property) {
+
+      return data.reduce((filmsMap, film) => {
+        const propertyName = film[property];
+        propertyName.forEach(propertyName => {
+          if (!filmsMap[propertyName]) {
+          filmsMap[propertyName] = [];
+          }
+          filmsMap[propertyName].push(film)
+        });
+          
+        return filmsMap;
+      }, {})
+    }
+    const filmMapped = new CreateMapByProperty(movies2, 'genre');
+
+    console.log(filmMapped);
+
+
+    filmMapped[Symbol.iterator] = function() {
+      const values = Object.values(this).flat();
+      const valuesUnique = values.reduce((filmsMap, film) => {
+        if (!filmsMap.includes(film)) {
+          filmsMap.push(film);
+        }
+        return filmsMap;
+      }, [])
+      
+      let valueFlatIndex = 0;
+      return {
+        next() {
+          if (valueFlatIndex === valuesUnique.length) {
+            return {
+              done: true
+            }
+          }
+          
+          return {
+            done: false,
+            value: valuesUnique[valueFlatIndex++]
+          }
+        }
+      }
+    };
+
+    for (const x of filmMapped) {
+      console.log('itterator', x);
+    }
+  </script>
+</body>
+</html>
