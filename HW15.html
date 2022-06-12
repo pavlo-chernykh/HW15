@@ -46,7 +46,7 @@
     
     function CreateMapByProperty (data, property) {
 
-      return data.reduce((filmsMap, film) => {
+      const reducedMap = data.reduce((filmsMap, film) => {
         const propertyName = film[property];
         propertyName.forEach(propertyName => {
           if (!filmsMap[propertyName]) {
@@ -55,15 +55,10 @@
           filmsMap[propertyName].push(film)
         });
           
-        return filmsMap;
-      }, {})
-    }
-    const filmMapped = new CreateMapByProperty(movies2, 'genre');
+      return filmsMap;
+      }, {});
 
-    console.log(filmMapped);
-
-
-    filmMapped[Symbol.iterator] = function() {
+      reducedMap[Symbol.iterator] = function() {
       const values = Object.values(this).flat();
       const valuesUnique = values.reduce((filmsMap, film) => {
         if (!filmsMap.includes(film)) {
@@ -88,6 +83,15 @@
         }
       }
     };
+    
+    return reducedMap;
+
+    }
+    const filmMapped = new CreateMapByProperty(movies2, 'genre');
+    // const filmMapped2 = new CreateMapByProperty(movies, 'genre');
+
+    console.log(filmMapped);
+    
 
     for (const x of filmMapped) {
       console.log('itterator', x);
